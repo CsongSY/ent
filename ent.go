@@ -52,6 +52,8 @@ type (
 		// Hooks returns an optional list of Hook to apply on
 		// mutations.
 		Hooks() []Hook
+		// Policy returns an optional privacy policy.
+		Policy() Policy
 	}
 
 	// A Field interface returns a field descriptor for vertex fields/properties.
