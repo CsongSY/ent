@@ -44,14 +44,14 @@ func (pc *PlanetCreate) SetNillableAge(u *uint) *PlanetCreate {
 }
 
 // AddNeighborIDs adds the neighbors edge to Planet by ids.
-func (pc *PlanetCreate) AddNeighborIDs(ids ...uint64) *PlanetCreate {
+func (pc *PlanetCreate) AddNeighborIDs(ids ...int) *PlanetCreate {
 	pc.mutation.AddNeighborIDs(ids...)
 	return pc
 }
 
 // AddNeighbors adds the neighbors edges to Planet.
 func (pc *PlanetCreate) AddNeighbors(p ...*Planet) *PlanetCreate {
-	ids := make([]uint64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -109,7 +109,7 @@ func (pc *PlanetCreate) sqlSave(ctx context.Context) (*Planet, error) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: planet.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeInt,
 				Column: planet.FieldID,
 			},
 		}
@@ -139,7 +139,7 @@ func (pc *PlanetCreate) sqlSave(ctx context.Context) (*Planet, error) {
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
+					Type:   field.TypeInt,
 					Column: planet.FieldID,
 				},
 			},
@@ -156,6 +156,6 @@ func (pc *PlanetCreate) sqlSave(ctx context.Context) (*Planet, error) {
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	pl.ID = uint64(id)
+	pl.ID = int(id)
 	return pl, nil
 }

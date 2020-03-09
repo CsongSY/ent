@@ -6,6 +6,26 @@
 
 package entschema
 
+import (
+	"github.com/facebookincubator/ent/entc/integration/privacy/ent/planet"
+	"github.com/facebookincubator/ent/entc/integration/privacy/ent/schema"
+)
+
+// The init function reads all schema descriptors with runtime
+// code (default values, validators or hooks) and stitches it
+// to their package variables.
+func init() {
+	planetHooks := schema.Planet{}.Hooks()
+	for i, h := range planetHooks {
+		planet.Hooks[i] = h
+	}
+	planetFields := schema.Planet{}.Fields()
+	// planetDescName is the schema descriptor for name field.
+	planetDescName := planetFields[0].Descriptor()
+	// planet.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	planet.NameValidator = planetDescName.Validators[0].(func(string) error)
+}
+
 // entc build info
 const (
 	Version = "(devel)"

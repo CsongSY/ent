@@ -6,7 +6,9 @@
 
 package planet
 
-import "github.com/facebookincubator/ent/entc/integration/privacy/ent/schema"
+import (
+	"github.com/facebookincubator/ent"
+)
 
 const (
 	// Label holds the string label denoting the planet type in the database.
@@ -38,10 +40,14 @@ var (
 	NeighborsPrimaryKey = []string{"planet_id", "neighbor_id"}
 )
 
+// Note that the variables below are initialized by the schema package
+// on the initialization of the application. Therefore, the schema package
+// should be imported in the main as follows:
+//
+//	import _ "github.com/facebookincubator/ent/entc/integration/privacy/ent/schema"
+//
 var (
-	fields = schema.Planet{}.Fields()
-	// descName is the schema descriptor for name field.
-	descName = fields[0].Descriptor()
+	Hooks [1]ent.Hook
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator = descName.Validators[0].(func(string) error)
+	NameValidator func(string) error
 )

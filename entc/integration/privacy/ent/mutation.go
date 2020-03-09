@@ -30,13 +30,13 @@ const (
 type PlanetMutation struct {
 	config
 	op, typ          string
-	id               *uint64
+	id               *int
 	name             *string
 	age              *uint
 	addage           *uint
 	clearedFields    map[string]bool
-	neighbors        map[uint64]struct{}
-	removedneighbors map[uint64]struct{}
+	neighbors        map[int]struct{}
+	removedneighbors map[int]struct{}
 }
 
 var _ ent.Mutation = (*PlanetMutation)(nil)
@@ -52,7 +52,7 @@ func newPlanetMutation(c config, op string) *PlanetMutation {
 
 // ID returns the id value in the mutation. Note that, the id
 // is available only if it was provided to the builder.
-func (m *PlanetMutation) ID() (id uint64, exists bool) {
+func (m *PlanetMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -131,9 +131,9 @@ func (m *PlanetMutation) ResetAge() {
 }
 
 // AddNeighborIDs adds the neighbors edge to Planet by ids.
-func (m *PlanetMutation) AddNeighborIDs(ids ...uint64) {
+func (m *PlanetMutation) AddNeighborIDs(ids ...int) {
 	if m.neighbors == nil {
-		m.neighbors = make(map[uint64]struct{})
+		m.neighbors = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.neighbors[ids[i]] = struct{}{}
@@ -141,9 +141,9 @@ func (m *PlanetMutation) AddNeighborIDs(ids ...uint64) {
 }
 
 // RemoveNeighborIDs removes the neighbors edge to Planet by ids.
-func (m *PlanetMutation) RemoveNeighborIDs(ids ...uint64) {
+func (m *PlanetMutation) RemoveNeighborIDs(ids ...int) {
 	if m.removedneighbors == nil {
-		m.removedneighbors = make(map[uint64]struct{})
+		m.removedneighbors = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.removedneighbors[ids[i]] = struct{}{}
@@ -151,7 +151,7 @@ func (m *PlanetMutation) RemoveNeighborIDs(ids ...uint64) {
 }
 
 // RemovedNeighbors returns the removed ids of neighbors.
-func (m *PlanetMutation) RemovedNeighborsIDs() (ids []uint64) {
+func (m *PlanetMutation) RemovedNeighborsIDs() (ids []int) {
 	for id := range m.removedneighbors {
 		ids = append(ids, id)
 	}
@@ -159,7 +159,7 @@ func (m *PlanetMutation) RemovedNeighborsIDs() (ids []uint64) {
 }
 
 // NeighborsIDs returns the neighbors ids in the mutation.
-func (m *PlanetMutation) NeighborsIDs() (ids []uint64) {
+func (m *PlanetMutation) NeighborsIDs() (ids []int) {
 	for id := range m.neighbors {
 		ids = append(ids, id)
 	}
@@ -326,7 +326,7 @@ func (m *PlanetMutation) AddedEdges() []string {
 func (m *PlanetMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case planet.EdgeNeighbors:
-		ids := make([]uint64, 0, len(m.neighbors))
+		ids := make([]int, 0, len(m.neighbors))
 		for id := range m.neighbors {
 			ids = append(ids, id)
 		}
@@ -349,7 +349,7 @@ func (m *PlanetMutation) RemovedEdges() []string {
 func (m *PlanetMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
 	case planet.EdgeNeighbors:
-		ids := make([]uint64, 0, len(m.removedneighbors))
+		ids := make([]int, 0, len(m.removedneighbors))
 		for id := range m.removedneighbors {
 			ids = append(ids, id)
 		}

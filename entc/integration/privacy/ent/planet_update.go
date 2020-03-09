@@ -59,14 +59,14 @@ func (pu *PlanetUpdate) ClearAge() *PlanetUpdate {
 }
 
 // AddNeighborIDs adds the neighbors edge to Planet by ids.
-func (pu *PlanetUpdate) AddNeighborIDs(ids ...uint64) *PlanetUpdate {
+func (pu *PlanetUpdate) AddNeighborIDs(ids ...int) *PlanetUpdate {
 	pu.mutation.AddNeighborIDs(ids...)
 	return pu
 }
 
 // AddNeighbors adds the neighbors edges to Planet.
 func (pu *PlanetUpdate) AddNeighbors(p ...*Planet) *PlanetUpdate {
-	ids := make([]uint64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -74,14 +74,14 @@ func (pu *PlanetUpdate) AddNeighbors(p ...*Planet) *PlanetUpdate {
 }
 
 // RemoveNeighborIDs removes the neighbors edge to Planet by ids.
-func (pu *PlanetUpdate) RemoveNeighborIDs(ids ...uint64) *PlanetUpdate {
+func (pu *PlanetUpdate) RemoveNeighborIDs(ids ...int) *PlanetUpdate {
 	pu.mutation.RemoveNeighborIDs(ids...)
 	return pu
 }
 
 // RemoveNeighbors removes neighbors edges to Planet.
 func (pu *PlanetUpdate) RemoveNeighbors(p ...*Planet) *PlanetUpdate {
-	ids := make([]uint64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -144,7 +144,7 @@ func (pu *PlanetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   planet.Table,
 			Columns: planet.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeInt,
 				Column: planet.FieldID,
 			},
 		},
@@ -185,7 +185,7 @@ func (pu *PlanetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
+					Type:   field.TypeInt,
 					Column: planet.FieldID,
 				},
 			},
@@ -204,7 +204,7 @@ func (pu *PlanetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
+					Type:   field.TypeInt,
 					Column: planet.FieldID,
 				},
 			},
@@ -260,14 +260,14 @@ func (puo *PlanetUpdateOne) ClearAge() *PlanetUpdateOne {
 }
 
 // AddNeighborIDs adds the neighbors edge to Planet by ids.
-func (puo *PlanetUpdateOne) AddNeighborIDs(ids ...uint64) *PlanetUpdateOne {
+func (puo *PlanetUpdateOne) AddNeighborIDs(ids ...int) *PlanetUpdateOne {
 	puo.mutation.AddNeighborIDs(ids...)
 	return puo
 }
 
 // AddNeighbors adds the neighbors edges to Planet.
 func (puo *PlanetUpdateOne) AddNeighbors(p ...*Planet) *PlanetUpdateOne {
-	ids := make([]uint64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -275,14 +275,14 @@ func (puo *PlanetUpdateOne) AddNeighbors(p ...*Planet) *PlanetUpdateOne {
 }
 
 // RemoveNeighborIDs removes the neighbors edge to Planet by ids.
-func (puo *PlanetUpdateOne) RemoveNeighborIDs(ids ...uint64) *PlanetUpdateOne {
+func (puo *PlanetUpdateOne) RemoveNeighborIDs(ids ...int) *PlanetUpdateOne {
 	puo.mutation.RemoveNeighborIDs(ids...)
 	return puo
 }
 
 // RemoveNeighbors removes neighbors edges to Planet.
 func (puo *PlanetUpdateOne) RemoveNeighbors(p ...*Planet) *PlanetUpdateOne {
-	ids := make([]uint64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -345,7 +345,7 @@ func (puo *PlanetUpdateOne) sqlSave(ctx context.Context) (pl *Planet, err error)
 			Table:   planet.Table,
 			Columns: planet.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeInt,
 				Column: planet.FieldID,
 			},
 		},
@@ -384,7 +384,7 @@ func (puo *PlanetUpdateOne) sqlSave(ctx context.Context) (pl *Planet, err error)
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
+					Type:   field.TypeInt,
 					Column: planet.FieldID,
 				},
 			},
@@ -403,7 +403,7 @@ func (puo *PlanetUpdateOne) sqlSave(ctx context.Context) (pl *Planet, err error)
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
+					Type:   field.TypeInt,
 					Column: planet.FieldID,
 				},
 			},

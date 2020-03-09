@@ -92,8 +92,8 @@ func (pq *PlanetQuery) FirstX(ctx context.Context) *Planet {
 }
 
 // FirstID returns the first Planet id in the query. Returns *NotFoundError when no id was found.
-func (pq *PlanetQuery) FirstID(ctx context.Context) (id uint64, err error) {
-	var ids []uint64
+func (pq *PlanetQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = pq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -105,7 +105,7 @@ func (pq *PlanetQuery) FirstID(ctx context.Context) (id uint64, err error) {
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (pq *PlanetQuery) FirstXID(ctx context.Context) uint64 {
+func (pq *PlanetQuery) FirstXID(ctx context.Context) int {
 	id, err := pq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -139,8 +139,8 @@ func (pq *PlanetQuery) OnlyX(ctx context.Context) *Planet {
 }
 
 // OnlyID returns the only Planet id in the query, returns an error if not exactly one id was returned.
-func (pq *PlanetQuery) OnlyID(ctx context.Context) (id uint64, err error) {
-	var ids []uint64
+func (pq *PlanetQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = pq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -156,7 +156,7 @@ func (pq *PlanetQuery) OnlyID(ctx context.Context) (id uint64, err error) {
 }
 
 // OnlyXID is like OnlyID, but panics if an error occurs.
-func (pq *PlanetQuery) OnlyXID(ctx context.Context) uint64 {
+func (pq *PlanetQuery) OnlyXID(ctx context.Context) int {
 	id, err := pq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -179,8 +179,8 @@ func (pq *PlanetQuery) AllX(ctx context.Context) []*Planet {
 }
 
 // IDs executes the query and returns a list of Planet ids.
-func (pq *PlanetQuery) IDs(ctx context.Context) ([]uint64, error) {
-	var ids []uint64
+func (pq *PlanetQuery) IDs(ctx context.Context) ([]int, error) {
+	var ids []int
 	if err := pq.Select(planet.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func (pq *PlanetQuery) IDs(ctx context.Context) ([]uint64, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pq *PlanetQuery) IDsX(ctx context.Context) []uint64 {
+func (pq *PlanetQuery) IDsX(ctx context.Context) []int {
 	ids, err := pq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -322,14 +322,14 @@ func (pq *PlanetQuery) sqlAll(ctx context.Context) ([]*Planet, error) {
 
 	if query := pq.withNeighbors; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[uint64]*Planet, len(nodes))
+		ids := make(map[int]*Planet, len(nodes))
 		for _, node := range nodes {
 			ids[node.ID] = node
 			fks = append(fks, node.ID)
 		}
 		var (
-			edgeids []uint64
-			edges   = make(map[uint64][]*Planet)
+			edgeids []int
+			edges   = make(map[int][]*Planet)
 		)
 		_spec := &sqlgraph.EdgeQuerySpec{
 			Edge: &sqlgraph.EdgeSpec{
@@ -353,8 +353,8 @@ func (pq *PlanetQuery) sqlAll(ctx context.Context) ([]*Planet, error) {
 				if !ok || ein == nil {
 					return fmt.Errorf("unexpected id value for edge-in")
 				}
-				outValue := uint64(eout.Int64)
-				inValue := uint64(ein.Int64)
+				outValue := int(eout.Int64)
+				inValue := int(ein.Int64)
 				node, ok := ids[outValue]
 				if !ok {
 					return fmt.Errorf("unexpected node id in edges: %v", outValue)
@@ -405,7 +405,7 @@ func (pq *PlanetQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   planet.Table,
 			Columns: planet.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUint64,
+				Type:   field.TypeInt,
 				Column: planet.FieldID,
 			},
 		},

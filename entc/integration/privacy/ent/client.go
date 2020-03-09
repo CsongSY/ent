@@ -120,14 +120,14 @@ func (c *PlanetClient) Use(hooks ...Hook) {
 
 // Create returns a create builder for Planet.
 func (c *PlanetClient) Create() *PlanetCreate {
-	hooks := c.hooks
+	hooks := append(planet.Hooks[:], c.hooks...)
 	mutation := newPlanetMutation(c.config, OpCreate)
 	return &PlanetCreate{config: c.config, hooks: hooks, mutation: mutation}
 }
 
 // Update returns an update builder for Planet.
 func (c *PlanetClient) Update() *PlanetUpdate {
-	hooks := c.hooks
+	hooks := append(planet.Hooks[:], c.hooks...)
 	mutation := newPlanetMutation(c.config, OpUpdate)
 	return &PlanetUpdate{config: c.config, hooks: hooks, mutation: mutation}
 }
@@ -138,8 +138,8 @@ func (c *PlanetClient) UpdateOne(pl *Planet) *PlanetUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *PlanetClient) UpdateOneID(id uint64) *PlanetUpdateOne {
-	hooks := c.hooks
+func (c *PlanetClient) UpdateOneID(id int) *PlanetUpdateOne {
+	hooks := append(planet.Hooks[:], c.hooks...)
 	mutation := newPlanetMutation(c.config, OpUpdateOne)
 	mutation.id = &id
 	return &PlanetUpdateOne{config: c.config, hooks: hooks, mutation: mutation}
@@ -147,7 +147,7 @@ func (c *PlanetClient) UpdateOneID(id uint64) *PlanetUpdateOne {
 
 // Delete returns a delete builder for Planet.
 func (c *PlanetClient) Delete() *PlanetDelete {
-	hooks := c.hooks
+	hooks := append(planet.Hooks[:], c.hooks...)
 	mutation := newPlanetMutation(c.config, OpDelete)
 	return &PlanetDelete{config: c.config, hooks: hooks, mutation: mutation}
 }
@@ -158,7 +158,7 @@ func (c *PlanetClient) DeleteOne(pl *Planet) *PlanetDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *PlanetClient) DeleteOneID(id uint64) *PlanetDeleteOne {
+func (c *PlanetClient) DeleteOneID(id int) *PlanetDeleteOne {
 	builder := c.Delete().Where(planet.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -171,12 +171,12 @@ func (c *PlanetClient) Query() *PlanetQuery {
 }
 
 // Get returns a Planet entity by its id.
-func (c *PlanetClient) Get(ctx context.Context, id uint64) (*Planet, error) {
+func (c *PlanetClient) Get(ctx context.Context, id int) (*Planet, error) {
 	return c.Query().Where(planet.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *PlanetClient) GetX(ctx context.Context, id uint64) *Planet {
+func (c *PlanetClient) GetX(ctx context.Context, id int) *Planet {
 	pl, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
