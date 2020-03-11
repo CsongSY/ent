@@ -151,7 +151,20 @@ type (
 	// }
 	//
 	// func(T) Policy() ent.Policy {
-	//     return privacy.AlwaysAllowReadWrite()
+	//     return privacy.Policy {
+	//         // equivalent to an empty read policy.
+	//         ReadPolicy: privacy.ReadPolicy{
+	//             privacy.AlwaysAllowRule(),
+	//         },
+	//         WritePolicy: privacy.WritePolicy{
+	//             privacy.WriteRuleFunc(func(_ context.Context, m privacy.Mutation) error {
+	//                 if m.Op().Is(ent.OpDelete | ent.OpDeleteOne) {
+	//                     return privacy.Denyf("ent/privacy: type T cannot be deleted")
+	//                 }
+	//                 return privacy.Skip
+	//             })
+	//         },
+	//     }
 	// }
 	Policy interface {
 		EvalRead(context.Context, Value) error
